@@ -1,6 +1,6 @@
-# Machine Learning - Project 2
+# Financial Big Data - Project 
 
-## Studying Lobbying Influence in the European Parliament using Twitter data
+## Cluster and RTM analysis for portfolio optimization
 
 ## Abstract
 
