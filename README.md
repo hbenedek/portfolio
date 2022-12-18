@@ -1,6 +1,4 @@
-# Financial Big Data - Project 
-
-## Cluster and RTM analysis for portfolio optimization
+# Cluster and RTM analysis for portfolio optimization
 
 ## Abstract
 
