@@ -104,28 +104,24 @@ def marcenkoPastur(X):
     return (lambda_min, lambda_max), rho
 
 
-def rtm_clipped(X: pd.DataFrame, alpha: Union[float, Real] = None) -> np.ndarray:
+def rtm_clipped(X: pd.DataFrame, alpha: Union[List[float], float, Real] = None) -> np.ndarray:
     """
     Clips the eigenvalues of an empirical correlation matrix `E` in order to provide a cleaned estimator `E_clipped` 
     of the underlying correlation matrix.
     Proceeds by keeping the `[N * alpha]` top eigenvalues and shrinking the remaining ones by a trace-preserving constant 
-    (i.e. `Tr(E_clipped) = Tr(E)`).
+
 
     Args:
         X (pd.DataFrame): Design matrix, of shape (T, N), where `T` denotes the number of samples (think measurements
                           in a time series), while `N` stands for the number of features (think of stock tickers).
-        alpha (Union[float, Real], optional): Parameter between 0 and 1, inclusive, determining the fraction to keep of 
+        alpha Union[List[float], float, Real], optional): Parameter between 0 and 1, inclusive, determining the fraction to keep of 
                                             the top eigenvalues of an empirical correlation matrix. If left unspecified,
                                             `alpha` is chosen so as to keep all the empirical eigenvalues greater than 
-                                            the upper limit of the support to the Marcenko-Pastur spectrum. Defaults to None.
+                                            the upper limit of the support to the Marcenko-Pastur spectrum. Defaults to None,
+                                            if alpha is a list of floats, the function returns the estimator for all alphas
 
     Returns:
-        np.ndarray: Cleaned estimator of the true correlation matrix `C` underlying a noisy, in-sample estimate `E` 
-                    (empirical correlation matrix estimated from `X`). This cleaned estimator proceeds through a simple 
-                    eigenvalue clipping procedure. If `return_covariance=True`, `E_clipped` corresponds to a cleaned variance-covariance matrix.
-
-    Raises:
-        AssertionError: If `alpha` is not a real number between 0 and 1 (inclusive).
+        np.ndarray: Cleaned estimator of the true correlation matrix 
     
     References:
        "Financial Applications of Random Matrix Theory: a short review",
@@ -136,7 +132,10 @@ def rtm_clipped(X: pd.DataFrame, alpha: Union[float, Real] = None) -> np.ndarray
 
     try:
         if alpha is not None:
-            assert isinstance(alpha, Real) and 0 <= alpha <= 1
+            if isinstance(alpha, Real):
+                alpha = [alpha]
+            for a in alpha:
+                assert isinstance(a, Real) and 0 <= a <= 1
             
     except AssertionError:
         raise
@@ -149,27 +148,32 @@ def rtm_clipped(X: pd.DataFrame, alpha: Union[float, Real] = None) -> np.ndarray
     eigvals, eigvecs = np.linalg.eigh(E)
     eigvecs = eigvecs.T
 
-    if alpha is None:
-        (lambda_min, lambda_max), _ = marcenkoPastur(X)
-        xi_clipped = np.where(eigvals >= lambda_max, eigvals, np.nan)
-    else:
-        xi_clipped = np.full(N, np.nan)
-        threshold = int(ceil(alpha * N))
-        if threshold > 0:
-            xi_clipped[-threshold:] = eigvals[-threshold:]
+    E_clipped = []
+    alpha = [None] + alpha
+    for a in alpha:
+        if a is None:
+            (lambda_min, lambda_max), _ = marcenkoPastur(X)
+            xi_clipped = np.where(eigvals >= lambda_max, eigvals, np.nan)
+        else:
+            xi_clipped = np.full(N, np.nan)
+            threshold = int(ceil(a * N))
+            if threshold > 0:
+                xi_clipped[-threshold:] = eigvals[-threshold:]
 
-    gamma = float(E.trace() - np.nansum(xi_clipped))
-    gamma /= np.isnan(xi_clipped).sum()
-    xi_clipped = np.where(np.isnan(xi_clipped), gamma, xi_clipped)
+        gamma = float(E.trace() - np.nansum(xi_clipped))
+        gamma /= np.isnan(xi_clipped).sum()
+        xi_clipped = np.where(np.isnan(xi_clipped), gamma, xi_clipped)
 
-    E_clipped = np.zeros((N, N), dtype=float)
-    for xi, eigvec in zip(xi_clipped, eigvecs):
-        eigvec = eigvec.reshape(-1, 1)
-        E_clipped += xi * eigvec.dot(eigvec.T)
+        E_clipped_i = np.zeros((N, N), dtype=float)
+        for xi, eigvec in zip(xi_clipped, eigvecs):
+            eigvec = eigvec.reshape(-1, 1)
+            E_clipped_i += xi * eigvec.dot(eigvec.T)
         
-    tmp = 1./np.sqrt(np.diag(E_clipped))
-    E_clipped *= tmp
-    E_clipped *= tmp.reshape(-1, 1)
+        tmp = 1./np.sqrt(np.diag(E_clipped_i))
+        E_clipped_i *= tmp
+        E_clipped_i *= tmp.reshape(-1, 1)
+
+        E_clipped.append(E_clipped_i)
 
     return E_clipped
 

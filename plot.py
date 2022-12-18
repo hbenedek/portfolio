@@ -56,3 +56,36 @@ def plot_out_risk(df):
     sns.lineplot(data=df, x="date", y="out_risk_rolling", hue="model", ax=ax)
     ax.set(xlabel="Date", ylabel="Risk", title="Out-of-sample risk evolution", ylim=[0,0.05])
 
+
+def plot_contour(result_dict):
+    perc = lambda x,y: result_dict.get((x,y), np.NaN)
+    v_func = np.vectorize(perc)    # major key!
+
+    max_T = 1000
+    max_N = 500
+    Ts = np.linspace(0,max_T, 11)[1:]
+    Ns = np.linspace(0, max_N, 11)[1:]
+    X,Y= np.meshgrid(Ts, Ns)
+
+    Z = v_func(X,Y).T
+
+    plt.figure()
+    fig, ax = plt.subplots(1,1, figsize=(10,5))
+    CS = ax.contourf(X,Y,Z)
+    ax.set(xlabel="T", ylabel="N")
+    fig.colorbar(CS)
+    plt.show()
+
+
+def plot_clippings(path="results/q2.pkl"):
+    df= pd.DataFrame(res)
+
+    df_melted = df.melt(id_vars=None, value_vars=list(df.columns), var_name="model", value_name="value")
+    df_melted = df_melted[["model", "value"]]
+
+    fig, ax = plt.subplots(1,2, figsize=(20,8))
+    sns.boxplot(data=df_melted, x="model", y="value", ax=ax[0], dodge=False)#ci=99)#
+    ax[0].set(ylim=[0,0.6])
+    ax[0].legend()
+
+    df[["Marcenko-Pastur", 0.3]].plot(ylim=[0, 0.6], ax=ax[1])

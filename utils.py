@@ -1,3 +1,4 @@
+from collections import defaultdict
 import numpy as np 
 from tqdm import tqdm
 import itertools
@@ -169,7 +170,7 @@ def bootstrapped_reliabilities(df: pd.DataFrame, max_T: int=1000, max_N: int=500
         N, T = int(N), int(T)
         for _ in range(Nboot):
             try:
-                t0 = int(np.random.randint(max_T, nb_dates))
+                t0 = int(np.random.randint(0, nb_dates - T))
                 R = df.sample(N, axis=1).iloc[t0: t0 + T]
                 R /= R.std()
                 
@@ -191,3 +192,26 @@ def bootstrapped_reliabilities(df: pd.DataFrame, max_T: int=1000, max_N: int=500
         NT_to_percentage[(N, T)] = percentage
 
     return NT_to_percentage
+
+
+def bootstrapped_clipping(df: pd.DataFrame, nb_cells: int, N: int, T: int, t: int=0):
+    df = df.sample(N, axis=1)
+    nb_dates, nb_assets = df.shape
+    result_dict = defaultdict(list)
+    alphas = [i/nb_cells for i in range(1,nb_cells)]
+    for t0 in tqdm(range(t,len(df) - T)):
+        
+        R = df.iloc[t0: t0 + T]
+        R /= R.std()
+        #R = R.fillna(0)
+
+        rtm_corrs =  rtm_clipped(R, alpha=alphas)
+        for rtm_corr, alpha in zip(rtm_corrs, ["Marcenko-Pastur"]+alphas):
+            try:
+                w_rtm = get_markovitz_weights(R, rtm_corr)
+                reliability_rtm = get_reliability(R, rtm_corr, w_rtm)
+
+                result_dict[alpha].append(reliability_rtm)
+            except:
+                result_dict[alpha].append(np.NaN)                
+    return result_dict

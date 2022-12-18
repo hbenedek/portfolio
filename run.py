@@ -1,6 +1,6 @@
-from typing import Dict
+from typing import Dict, Tuple
 import pandas as pd
-from utils import bootstrapped_reliabilities, rolling_evolution
+from utils import bootstrapped_reliabilities, rolling_evolution, bootstrapped_clipping
 from model import *
 from preprocess import *
   
@@ -46,7 +46,16 @@ def question_1(T: int, method: callable, path: str="data/nasdaq_raw_2010_2020.cs
     rolling_evolution(df, 0, T, method)
 
 
-def question_3(max_T:int =1000, max_N: int=500, Nboot: int=50, nb_cells: int=101, path: str="data/nasdaq_raw_2010_2020.csv") -> Dict[(int, int), float]:
+def question_2(nb_cells: int=10, N:int=200, T:int=300, path: str="data/nasdaq_raw_2010_2020.csv"):
+    df = pd.read_csv(path)
+    df = preprocess_df(df)
+    result = bootstrapped_clipping(df, nb_cells, N, T, t=0)
+    print(result)
+    dump_pickle(result, "q2.pkl")
+
+
+
+def question_3(max_T:int =1000, max_N: int=500, Nboot: int=50, nb_cells: int=101, path: str="data/nasdaq_raw_2010_2020.csv"):
     """
     Wrapper function for Question 3.
     How does the reliability of the models changes in the function of T and N ?
@@ -69,4 +78,4 @@ def question_3(max_T:int =1000, max_N: int=500, Nboot: int=50, nb_cells: int=101
     return rel_dict
 
 if __name__ == "__main__":
-    pass
+    question_2()
