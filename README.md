@@ -1,6 +1,4 @@
-# Financial Big Data - Project 
-
-## Cluster and RTM analysis for portfolio optimization
+# Cluster and RTM analysis for portfolio optimization
 
 ## Abstract
 
@@ -13,7 +11,7 @@ goals and risk tolerance. In this report we investigate different techniques on 
 putting emphasis on the statistical uncertainty of the correlation matrix and its cleaning procedures. We try to answer the following questions:
 
 - How does the out-of-sample risk and Neff evolve for different covariance estimates?
-- How does the out-of-sample risk change in RTM for different cut-off values?
+- How does the reliability change in RTM for different cut-off values?
 - How does the reliability of the models changes in the function of T and N ?
 
 ## Dependencies
