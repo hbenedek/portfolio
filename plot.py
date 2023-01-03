@@ -77,8 +77,8 @@ def plot_contour(result_dict):
     plt.show()
 
 
-def plot_clippings(path="results/q2.pkl"):
-    df= pd.DataFrame(res)
+def plot_clippings(result_dict):
+    df= pd.DataFrame(result_dict)
 
     df_melted = df.melt(id_vars=None, value_vars=list(df.columns), var_name="model", value_name="value")
     df_melted = df_melted[["model", "value"]]

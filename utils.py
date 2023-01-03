@@ -5,6 +5,8 @@ import itertools
 import time
 from model import *
 
+
+
 def get_markovitz_weights(R: pd.DataFrame, sigma_pred: np.ndarray) -> np.ndarray:
     """
     Calculate the Markowitz weights for the given data and predicted covariance matrix.
@@ -70,7 +72,7 @@ def get_risk(R, w) -> float:
     return w.T @ sigma @ w
 
 
-def rolling_evolution(df, t, T, correlation_estimate, output_path="data/cluster_result.csv"):
+def rolling_evolution(df, t, T, correlation_estimate, output_path="results/cluster_result.csv"):
     """
     Calculate the rolling evolution for the given dataframe.
     
@@ -88,7 +90,7 @@ def rolling_evolution(df, t, T, correlation_estimate, output_path="data/cluster_
         correlation_estimate: A function that takes in a dataframe and returns a predicted covariance
             matrix. This function will be used to estimate the covariance matrix of the in-sample data.
         output_path (optional): A string representing the path to the output file. The default value
-            is "data/cluster_result.csv".
+            is "results/cluster_result.csv".
     
     Returns:
         0, indicating that the function completed successfully.
@@ -195,6 +197,22 @@ def bootstrapped_reliabilities(df: pd.DataFrame, max_T: int=1000, max_N: int=500
 
 
 def bootstrapped_clipping(df: pd.DataFrame, nb_cells: int, N: int, T: int, t: int=0):
+    """
+    Samples N stocks from the given dataframe and computes the reliabilities using the RTM method in a rolling window.
+    for different values of alpha in the range [0, 1] plus the Marcenko-Pastur edge case.
+
+    Args:
+        df (pd.DataFrame): A Pandas dataframe containing the data to be used for calculating the reliabilities.
+        nb_cells (int): An integer representing the number of cells to use when discretizing
+            the values of alpha.
+        N (int): An integer representing the number of stocks to use in the calculations.
+        T (int): An integer representing the length of time window to use in the calculations.
+        t (int): An integer representing the starting index of the time window to use in the calculations.
+            Defaults to 0.
+
+    Returns:
+        A dictionary that maps the values of alpha to the reliabilities computed using the RTM method.
+    """
     df = df.sample(N, axis=1)
     nb_dates, nb_assets = df.shape
     result_dict = defaultdict(list)
@@ -215,3 +233,4 @@ def bootstrapped_clipping(df: pd.DataFrame, nb_cells: int, N: int, T: int, t: in
             except:
                 result_dict[alpha].append(np.NaN)                
     return result_dict
+

@@ -53,7 +53,6 @@ def scrape_yahoo(tickers: List[str], start: datetime.datetime, end: datetime.dat
                 stock_final = stock_final.append(stock,sort=False)
         except Exception:
             None
-    stock_final.to_csv(f"nasdaq_raw.csv")
     return stock_final
 
 

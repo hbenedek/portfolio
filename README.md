@@ -32,25 +32,25 @@ python -m pip install git+https://github.com/facebookresearch/fastText.git
 First step is to download and save the NASDAQ stock prices. This takes a couple of minutes and can be done by running
 
 ```bash
-python3 run.py -scrape 1
+python3 run.py --question 0 --start "2010-01-01" --end "2010-12-31"
 ```
 
 In order to run the model pipeline, execute file `run.py`, to run the computations for Question 1
 
 ```bash
-python3 run.py --question 1
+python3 run.py --question 1 --T 252 --method average
 ```
 
 to run the computations for Question 2
 
 ```bash
-python3 run.py --question 2
+python3 run.py --question 2 --nb_cells 10 -T 300 --N 200
 ```
 
 to run the computations for Question 3
 
 ```bash
-python3 run.py --question 3
+python3 run.py --question 3 --max_T 1000 --max_N 500 --Nboot 50 --nb_cells 10
 ```
 
 
