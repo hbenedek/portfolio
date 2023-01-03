@@ -33,12 +33,12 @@ def question_1(T: int, method: callable, output_path: str, path: str="data/nasda
     """
     Wrapper function for Question 1:
     How does the out-of-sample risk and Neff evolve for different covariance estimates?
-    Incrementally performs porfolio optimization, then saves the out-of-sample risk, number of effective stocks, reliability to a csv file.
+    Incrementally performs portfolio optimization, then saves the out-of-sample risk, number of effective stocks, reliability to a csv file.
     For more detail, see the docstring of rolling_evolution()
 
     Args:
-        T (int): Lenght of the rolling window
-        method (callable): The method to use. Must be one of "empirical_correlation", "rtm_clipping", "average_linkage_clsuter".
+        T (int): Length of the rolling window
+        method (callable): The method to use. Must be one of "empirical_correlation", "rtm_clipping", "average_linkage_cluster".
         path (str): The path to the file where the data should be loaded from. Defaults to "data/nasdaq_raw_2010_2020.csv".
 
     Returns:
@@ -51,21 +51,25 @@ def question_1(T: int, method: callable, output_path: str, path: str="data/nasda
 
 
 def question_2(nb_cells: int=10, N:int=200, T:int=300, path: str="data/nasdaq_raw_2010_2020.csv"): 
+    """
+    Wrapper function for Question 2:
+    How does the reliability change in RTM for different cut-off values?
+    For N number of randomly selected stocks with a rolling window of T, the RTM method was performed for 
+    different cut-off values. The reliability was calculated for each cut-off value and the results were pickled.
+    """
     df = pd.read_csv(path)
     df = preprocess_df(df)
+
     print("number of days:", df.shape[0], "number of stocks:", df.shape[1])
     result = bootstrapped_clipping(df, nb_cells, N, T, t=0)
-    print(result)
-    dump_pickle(result, "results/q2.pkl")
     return result
-
 
 
 def question_3(max_T:int =1000, max_N: int=500, Nboot: int=50, nb_cells: int=101, path: str="data/nasdaq_raw_2010_2020.csv"):
     """
     Wrapper function for Question 3.
     How does the reliability of the models changes in the function of T and N ?
-    For each (N, T) pairs performs a Nboot numbe rof bootstrapped portfolio optimization 
+    For each (N, T) pairs performs a Nboot number of bootstrapped portfolio optimization 
     and compare the reliability for the methods "rtm_clipping" and "average_linkage_cluster".
 
     Args:
@@ -79,8 +83,8 @@ def question_3(max_T:int =1000, max_N: int=500, Nboot: int=50, nb_cells: int=101
     """
     df = pd.read_csv(path) 
     df = preprocess_df(df)
+
     rel_dict = bootstrapped_reliabilities(df, max_T=max_T, max_N=max_N, Nboot=Nboot, nb_cells=nb_cells)
-    dump_pickle(rel_dict, "results/q3.pkl")
     return rel_dict
 
 if __name__ == "__main__":
@@ -117,9 +121,11 @@ if __name__ == "__main__":
     elif args.question == 2:
         result = question_2(args.nb_cells, args.N, args.T, args.path)
         plot_contour(result)
+        dump_pickle(result, "results/q2.pkl")
     elif args.question == 3:
-        result_dict = question_3(args.max_T, args.max_N, args.Nboot, args.nb_cells, args.path)
-        plot_clippings(result_dict)
+        result = question_3(args.max_T, args.max_N, args.Nboot, args.nb_cells, args.path)
+        dump_pickle(result, "results/q3.pkl")
+        plot_clippings(result)
     else:
         raise ValueError("Question number must be in [0, 1, 2, 3]")
 
