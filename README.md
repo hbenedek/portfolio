@@ -16,14 +16,12 @@ putting emphasis on the statistical uncertainty of the correlation matrix and it
 
 ## Dependencies
   
-The “requirements.txt” is a file containing a list of items to be installed using pip install like so:
+The “requirements.txt” is a file containing a list of items to be installed using pip install like so
 
 ```bash
 python -m pip install -r requirements.txt
 ```
-```bash
-python -m pip install git+https://github.com/facebookresearch/fastText.git
-```
+
 
 ## Running the code
 
@@ -48,9 +46,14 @@ python3 run.py --question 2 --nb_cells 10 -T 300 --N 200
 to run the computations for Question 3
 
 ```bash
-python3 run.py --question 3 --max_T 1000 --max_N 500 --Nboot 50 --nb_cells 10
+python3 run.py --question 3 --max_T 1000 --max_N 500 --Nboot 50 --nb_cells 11
 ```
 
+the repo contains the saved csv and pickle files for the three questions, the plots can be reproduce by running, where the question flag is 1, 2 or 3
+
+```bash
+python3 plot.py --question 1
+```
 
 ## Repo Structure
 

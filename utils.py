@@ -55,7 +55,7 @@ def get_reliability(R, sigma_pred, w) -> float:
     sigma = R.corr().fillna(0).values
     realized_risk = w.T @ sigma @ w
     predicted_risk = w.T @ sigma_pred @ w
-    return np.abs(realized_risk - predicted_risk) / predicted_risk
+    return abs(realized_risk - predicted_risk) / predicted_risk
 
 def get_risk(R, w) -> float:
     """
@@ -123,7 +123,7 @@ def rolling_evolution(df, t, T, correlation_estimate, output_path="results/clust
             f.write(f"{line}\n") 
             f.close()
         except:
-            print("ERROR OCCURED AT %s", t0)
+            print("ERROR OCCURED AT", t0)
             line = (str(t0)+",,,,").translate({ord('('): '', ord(')'): ''})
             f = open(output_path,'a')
             f.write(f"{line}\n") 
@@ -162,11 +162,10 @@ def bootstrapped_reliabilities(df: pd.DataFrame, max_T: int=1000, max_N: int=500
     Ts = np.linspace(0,max_T, nb_cells)[1:]
     Ns = np.linspace(0, max_N, nb_cells)[1:]
     results = list(itertools.product(Ts, Ns))
-    filtered_pairs = [result for result in results if result[0] > (result[1] + 50)]
     nb_dates, nb_assets = df.shape
 
     NT_to_percentage = {}
-    for (N, T) in tqdm(filtered_pairs):
+    for (N, T) in tqdm(results):
         rtm_results = []
         cluster_results = []
         N, T = int(N), int(T)
@@ -175,13 +174,13 @@ def bootstrapped_reliabilities(df: pd.DataFrame, max_T: int=1000, max_N: int=500
                 t0 = int(np.random.randint(0, nb_dates - T))
                 R = df.sample(N, axis=1).iloc[t0: t0 + T]
                 R /= R.std()
-                
+
                 rtm_corr = rtm_clipped(R)
                 cluster_corr = average_linkage_clustering(R)
-
+            
                 w_rtm = get_markovitz_weights(R, rtm_corr)
                 w_cluster = get_markovitz_weights(R, cluster_corr)
-
+            
                 reliability_rtm = get_reliability(R, rtm_corr, w_rtm)
                 reliability_cluster = get_reliability(R, cluster_corr, w_cluster)
 
@@ -189,6 +188,7 @@ def bootstrapped_reliabilities(df: pd.DataFrame, max_T: int=1000, max_N: int=500
                 cluster_results.append(reliability_cluster)
             except:
                 pass
+                print("ERROR OCCURED AT", (N, T))
         
         percentage = sum([rtm > cluster for (rtm, cluster) in zip(rtm_results, cluster_results)]) / Nboot
         NT_to_percentage[(N, T)] = percentage
@@ -224,7 +224,7 @@ def bootstrapped_clipping(df: pd.DataFrame, nb_cells: int, N: int, T: int, t: in
         #R = R.fillna(0)
 
         rtm_corrs =  rtm_clipped(R, alpha=alphas)
-        for rtm_corr, alpha in zip(rtm_corrs, ["Marcenko-Pastur"]+alphas):
+        for rtm_corr, alpha in zip(rtm_corrs, ["Marcenko-Pastur"] + alphas):
             try:
                 w_rtm = get_markovitz_weights(R, rtm_corr)
                 reliability_rtm = get_reliability(R, rtm_corr, w_rtm)

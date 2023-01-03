@@ -120,12 +120,14 @@ if __name__ == "__main__":
         question_1(args.T, f, output_path, args.path)  
     elif args.question == 2:
         result = question_2(args.nb_cells, args.N, args.T, args.path)
-        plot_contour(result)
         dump_pickle(result, "results/q2.pkl")
+        plot_clippings(result)
     elif args.question == 3:
         result = question_3(args.max_T, args.max_N, args.Nboot, args.nb_cells, args.path)
         dump_pickle(result, "results/q3.pkl")
-        plot_clippings(result)
+        print(result)
+        plot_contour(result)
+
     else:
         raise ValueError("Question number must be in [0, 1, 2, 3]")
 

@@ -68,7 +68,7 @@ def plot_contour(result_dict):
     Plot the contour of the reliability of the portfolios produced by RTM and clustering for different (T, N) pairs.
     """
     perc = lambda x,y: result_dict.get((x,y), np.NaN)
-    v_func = np.vectorize(perc)    # major key!
+    v_func = np.vectorize(perc)   
 
     max_T = 1000
     max_N = 500
@@ -80,7 +80,7 @@ def plot_contour(result_dict):
 
     plt.figure()
     fig, ax = plt.subplots(1,1, figsize=(10,5))
-    CS = ax.contourf(X,Y,Z)
+    CS = ax.contourf(X,Y,Z, vmin=0, vmax=1)
     ax.set(xlabel="T", ylabel="N")
     fig.colorbar(CS)
     plt.show()

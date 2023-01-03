@@ -104,7 +104,7 @@ def marcenkoPastur(X):
     return (lambda_min, lambda_max), rho
 
 
-def rtm_clipped(X: pd.DataFrame, alpha: Union[List[float], float, Real] = None) -> np.ndarray:
+def rtm_clipped(X: pd.DataFrame, alpha: Union[List[float], float, Real] = []) -> np.ndarray:
     """
     Clips the eigenvalues of an empirical correlation matrix `E` in order to provide a cleaned estimator `E_clipped` 
     of the underlying correlation matrix.
@@ -174,8 +174,11 @@ def rtm_clipped(X: pd.DataFrame, alpha: Union[List[float], float, Real] = None) 
         E_clipped_i *= tmp.reshape(-1, 1)
 
         E_clipped.append(E_clipped_i)
-
-    return E_clipped
+        
+    if len(E_clipped) == 1:
+        return E_clipped[0]
+    else:
+        return E_clipped
 
 ########## BOOTSTRAPPED ##########
 
