@@ -70,6 +70,7 @@ python3 plot.py --question 1
 ├─── results 
 ├─── plots 
 ├─── .gitignore
+├─── report.pdf : report containing results, discussions and methodologies
 ├─── requirements.txt : contains all the dependencies
 └─── README.md : README
 </pre>
