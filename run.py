@@ -25,6 +25,9 @@ def download_data(start: datetime.datetime, end: datetime.datetime, path: str="d
     tickers = scrape_tickers()
     tickers = tickers
     df = scrape_yahoo(tickers, start, end)
+    
+    if not os.path.exists("data"):
+        os.mkdir("data")
     df.to_csv(path)
     return df
 
