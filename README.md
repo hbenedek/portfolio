@@ -10,16 +10,19 @@ By using portfolio optimization, investors can create a balanced portfolio that 
 goals and risk tolerance. In this report we investigate different techniques on how to solve the optimization problem,
 putting emphasis on the statistical uncertainty of the correlation matrix and its cleaning procedures. We try to answer the following questions:
 
-- How does the out-of-sample risk and Neff evolve for different covariance estimates?
+- How does the out-of-sample risk and N_eff evolve for different covariance estimates?
 - How does the reliability change in RTM for different cut-off values?
 - How does the reliability of the models changes in the function of T and N ?
 
 ## Dependencies
-  
-The “requirements.txt” is a file containing a list of items to be installed using pip install like so
+You can create a conda environment and use the “requirements.txt” file to install necessary dependencies
 
 ```bash
-python -m pip install -r requirements.txt
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda create --name projectenv
+conda activate projectenv
+python3 -m pip install -r requirements.txt
 ```
 
 
@@ -40,7 +43,7 @@ python3 run.py --question 1 --T 252 --method average
 to run the computations for Question 2
 
 ```bash
-python3 run.py --question 2 --nb_cells 10 -T 300 --N 200
+python3 run.py --question 2 --nb_cells 10 --T 300 --N 200
 ```
 
 to run the computations for Question 3
@@ -64,7 +67,9 @@ python3 plot.py --question 1
 ├─── utils.py : rolling and bootstrap calculations, along with summary statistic calculations
 ├─── plot.py : auxiliary functions for plotting the results
 ├─── data
-├─── results
-├─── plots
+├─── results 
+├─── plots 
+├─── .gitignore
+├─── requirements.txt : contains all the dependencies
 └─── README.md : README
 </pre>

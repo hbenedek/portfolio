@@ -108,13 +108,13 @@ if __name__ == "__main__":
     if args.question == 1:
         if args.method == "rtm":
             f = rtm_clipped
-            output_path = "q1_rtm.csv"
+            output_path = "results/q1_rtm.csv"
         elif args.method == "average":
             f = average_linkage_clustering
-            output_path = "q1_average.csv"
+            output_path = "results/q1_average.csv"
         elif args.method == "empirical":
             f = empirical_correlation
-            output_path = "q1_empirical.csv"
+            output_path = "results/q1_empirical.csv"
         else:
             raise ValueError("Method must be one of rtm, average, empirical")
         question_1(args.T, f, output_path, args.path)  
@@ -126,7 +126,7 @@ if __name__ == "__main__":
         result = question_3(args.max_T, args.max_N, args.Nboot, args.nb_cells, args.path)
         dump_pickle(result, "results/q3.pkl")
         print(result)
-        plot_contour(result)
+        plot_contour(result, max_T=args.max_T, max_N=args.max_N)
 
     else:
         raise ValueError("Question number must be in [0, 1, 2, 3]")

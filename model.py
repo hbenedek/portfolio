@@ -182,18 +182,18 @@ def rtm_clipped(X: pd.DataFrame, alpha: Union[List[float], float, Real] = []) ->
 
 ########## BOOTSTRAPPED ##########
 
-from bahc import filterCovariance
-
-def bootsrap_halc(R):
-    """
-    Wrapper function for bootsrapped hierarhical clustering. Filters a covariance matrix using the BAHC algorithm.
-    
-    Args:
-        R (pd.DataFrame): Data matrix of shape (T, N).
-    
-    Returns:
-        np.ndarray: Filtered covariance matrix of shape (N, N).
-    """
-    F = filterCovariance(R.T.fillna(0).values, K=1, Nboot=50, is_correlation=True, method='near')
-    return F
+#from bahc import filterCovariance
+#
+#def bootsrap_halc(R):
+#    """
+#    Wrapper function for bootsrapped hierarhical clustering. Filters a covariance matrix using the BAHC algorithm.
+#    
+#    Args:
+#        R (pd.DataFrame): Data matrix of shape (T, N).
+#    
+#    Returns:
+#        np.ndarray: Filtered covariance matrix of shape (N, N).
+#    """
+#    F = filterCovariance(R.T.fillna(0).values, K=1, Nboot=50, is_correlation=True, method='near')
+#    return F
 

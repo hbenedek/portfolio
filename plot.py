@@ -63,15 +63,13 @@ def plot_out_risk(df):
     ax.set(xlabel="Date", ylabel="Risk", title="Out-of-sample risk evolution", ylim=[0,0.05])
 
 
-def plot_contour(result_dict):
+def plot_contour(result_dict, max_T=1000, max_N=500):
     """
     Plot the contour of the reliability of the portfolios produced by RTM and clustering for different (T, N) pairs.
     """
     perc = lambda x,y: result_dict.get((x,y), np.NaN)
     v_func = np.vectorize(perc)   
 
-    max_T = 1000
-    max_N = 500
     Ts = np.linspace(0,max_T, 11)[1:]
     Ns = np.linspace(0, max_N, 11)[1:]
     X,Y= np.meshgrid(Ts, Ns)
