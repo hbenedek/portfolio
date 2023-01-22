@@ -1,4 +1,4 @@
-# Cluster and RTM analysis for portfolio optimization
+# Cluster and RMT analysis for portfolio optimization
 
 ## Abstract
 
