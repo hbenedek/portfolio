@@ -49,8 +49,8 @@ def scrape_yahoo(tickers: List[str], start: datetime.datetime, end: datetime.dat
             if len(stock) == 0:
                 None
             else:
-                stock['Name']=ticker
-                stock_final = stock_final.append(stock,sort=False)
+                stock['Name'] = ticker
+                stock_final = stock_final.append(stock, sort=False)
         except Exception:
             None
     return stock_final

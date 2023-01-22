@@ -1,6 +1,9 @@
-numpy
+rie-estimator
 fastcluster
+numpy
 pandas
-seaborn
+seabron
 tqdm
-yfinance
+matplotlib
+bahc
+pyRTM

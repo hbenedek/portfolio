@@ -4,6 +4,25 @@ import pandas as pd
 from numbers import Complex, Integral, Real
 from math import ceil
 from typing import Union, Tuple, List
+import rie_estimator
+
+
+########## LINEAR SHRINKAGE ##########
+
+def linear_shrinkage(R: np.ndarray, alpha: float) -> np.ndarray:
+    """
+    Performs linear shrinkage on the given correlation matrix `R`.
+
+    Args:
+        R (np.ndarray): Correlation matrix of shape (N, N), where `N` is the number of features (e.g. stock tickers).
+        alpha (float): Shrinkage parameter.
+    
+    Returns:
+        np.ndarray: Shrinked correlation matrix of shape (N, N).
+    """
+    R = R.corr().fillna(0).values
+    return alpha * R + (1 - alpha) * np.eye(R.shape[0])
+
 
 ########## HALC ##########
 
@@ -61,7 +80,6 @@ def average_linkage_clustering(R: pd.DataFrame) -> np.ndarray:
     Rs = Rs + Rs.T
     np.fill_diagonal(Rs,1)
     return Rs
-
 
 
 ########## RANDOM MATRIX THEORY ##########
@@ -182,18 +200,33 @@ def rtm_clipped(X: pd.DataFrame, alpha: Union[List[float], float, Real] = []) ->
 
 ########## BOOTSTRAPPED ##########
 
-#from bahc import filterCovariance
-#
-#def bootsrap_halc(R):
-#    """
-#    Wrapper function for bootsrapped hierarhical clustering. Filters a covariance matrix using the BAHC algorithm.
-#    
-#    Args:
-#        R (pd.DataFrame): Data matrix of shape (T, N).
-#    
-#    Returns:
-#        np.ndarray: Filtered covariance matrix of shape (N, N).
-#    """
-#    F = filterCovariance(R.T.fillna(0).values, K=1, Nboot=50, is_correlation=True, method='near')
-#    return F
+from bahc import filterCovariance
 
+def bootsrap_halc(R):
+   """
+   Wrapper function for bootsrapped hierarhical clustering. Filters a covariance matrix using the BAHC algorithm.
+   
+   Args:
+       R (pd.DataFrame): Data matrix of shape (T, N).
+   
+   Returns:
+       np.ndarray: Filtered covariance matrix of shape (N, N).
+   """
+   F = filterCovariance(R.T.fillna(0).values, K=1, Nboot=10, is_correlation=True, method='near')
+   return F
+
+########## RIE ##########
+
+def rie_wrapper(R):
+    T, N = R.shape
+    R_clean = R.dropna(axis=1)
+    col_names = {col: i for i, col in enumerate(R.columns)}
+    notnans = np.array([col_names[col] for col in set(R_clean.columns)])
+    F = np.zeros((N, N))
+    C = rie_estimator.get_rie(R_clean)
+    F[np.ix_(notnans,notnans)] = C
+    np.fill_diagonal(F, 1)
+    return F
+
+if __name__ == '__main__':
+    pass
