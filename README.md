@@ -11,7 +11,7 @@ goals and risk tolerance. In this report we investigate different techniques on 
 putting emphasis on the statistical uncertainty of the correlation matrix and its cleaning procedures. We try to answer the following questions:
 
 - Q1: How does the out-of-sample risk changes for different shrinkage coefficients?
-- Q2: Does higher order clustering and bootsrapping improve HALC?
+- Q2: Does higher-order clustering and bootstrapping improve HALC?
 - Q3: How does the reliability change in RMT for different cut-off values?
 - Q4: How does the out-of-sample risk and Neff evolve for different covariance estimates?
 - Q5: How does the reliability of RMT and HALC changes in the function of T and N ?
