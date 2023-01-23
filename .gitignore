@@ -128,4 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-data/nasdaq_raw_2010_2020.csv
+
+data/

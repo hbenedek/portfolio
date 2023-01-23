@@ -38,39 +38,44 @@ First step is to download and save the NASDAQ stock prices. This takes a couple 
 python3 run.py --question 0 --start "2010-01-01" --end "2020-12-31"
 ```
 
-In order to run the model pipeline, execute file `run.py`, to run the computations for Question 1
+In order to run the model pipeline, execute file `run.py`, different questions can be run with the following commands
+
 
 ```bash
-python3 run.py --question 1 --T 252 --method rie
+python3 run.py --question 1 --T 300 --N 200 --nb_cells 10 
 ```
 
-to run the computations for Question 2
-
 ```bash
-python3 run.py --question 2 --nb_cells 10 --T 300 --N 200
+python3 run.py --question 2 --T 300 --N 200 
 ```
 
-to run the computations for Question 3
+```bash
+python3 run.py --question 3 --T 300 --N 200 --nb_cells 10
+```
 
 ```bash
-python3 run.py --question 3 --max_T 1000 --max_N 500 --Nboot 50 --nb_cells 11
+python3 run.py --question 4 --T 252 --method clustering
+```
+
+```bash
+python3 run.py --question 5 --max_T 1000 --max_N 500 --Nboot 50 --nb_cells 11
 ```
 
 ## Repo Structure
 
 <pre>  
-├─── run.py              : script to reproduce results, along with rolling window calculations
-├─── model.py            : RTM, shrinkage, HALC, BAHC, RIE algorithms
-├─── preprocess.py       : downloading and data preprocessing functions
-├─── utils.py            : summary statistics calculations
-├─── visualizations.ipynb: notebook produces the plots presented in the report
+├─── run.py               : script to reproduce results, along with rolling window calculations
+├─── model.py             : RTM, shrinkage, HALC, BAHC, RIE algorithms
+├─── preprocess.py        : downloading and data preprocessing functions
+├─── utils.py             : summary statistics calculations
+├─── visualizations.ipynb : notebook produces the plots presented in the report
 |
 ├─── data
 ├─── results 
 ├─── plots 
 |
 ├─── .gitignore
-├─── report.pdf          : report contains results, discussions and methodologies
-├─── requirements.txt    : contains all the dependencies
+├─── report.pdf           : report contains results, discussions and methodologies
+├─── requirements.txt     : contains all the dependencies
 └─── README.md 
 </pre>

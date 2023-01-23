@@ -3,13 +3,8 @@ import requests
 import io
 import yfinance as yf
 import datetime
-from tqdm import tqdm
 import numpy as np
-import fastcluster
 from math import ceil
-import os
-import seaborn as sns
-import time
 import pickle
 from typing import List, Any
 
