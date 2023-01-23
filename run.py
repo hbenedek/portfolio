@@ -113,16 +113,16 @@ def question_2(N: int = 200, T: int=300, path: str="data/nasdaq_raw_2010_2020.cs
     return results
 
 
-def question_3(nb_cells: int=10, N:int=200, T:int=300, path: str="data/nasdaq_raw_2010_2020.csv"): 
+def question_3(N:int=200, T:int=300, nb_cells: int=10, path: str="data/nasdaq_raw_2010_2020.csv"): 
     """
     How does the reliability change in RMT for different cut-off values?
     For N number of randomly selected stocks with a rolling window of T, the RTM method was performed for 
     different cut-off values. The reliability was calculated for each cut-off value and the results were pickled.
 
     Args:
-        nb_cells (int): Number of cut-off values to test.
         N (int): Number of randomly selected stocks. 
         T (int): Length of the rolling window. 
+        nb_cells (int): Number of cut-off values to test.
         path (str): The path to the file where the data should be loaded from. Defaults to "data/nasdaq_raw_2010_2020.csv".
 
     Returns:
@@ -178,7 +178,7 @@ def question_4(T: int, correlation_estimate: callable, output_path: str, path: s
     f.write("t0,neffs,reliability,out_risk,runtime\n") 
     f.close()
 
-    for t0 in tqdm(range(t,len(df) - T)):
+    for t0 in tqdm(range(0,len(df) - T)):
         try:
             R_in, R_out = df.iloc[t0: t0 + int(T/2)], df.iloc[int(T/2): T]
 
@@ -278,7 +278,6 @@ if __name__ == "__main__":
     parser.add_argument("--max_T", type=int, default=1000, help="Maximum length of the rolling window")
     parser.add_argument("--max_N", type=int, default=500, help="Maximum number of stocks in the portfolio")
     parser.add_argument("--Nboot", type=int, default=50, help="Number of bootstraps")
-    parser.add_argument("--alpha", type=float, default=0.5, help="Alpha for linear shrinkage")
     args = parser.parse_args()
       
     if args.question == 0:
@@ -289,11 +288,11 @@ if __name__ == "__main__":
         dump_pickle(result, "results/q1.pkl")
 
     elif args.question == 2:
-        result = question_2(args.nb_cells, args.N, args.T, args.path)
+        result = question_2(args.N, args.T, args.path)
         dump_pickle(result, "results/q2.pkl")
 
     elif args.question == 3:
-        result = question_3(args.max_T, args.max_N, args.Nboot, args.nb_cells, args.path)
+        result = question_3(args.max_N, args.max_T, args.nb_cells,args.path)
         dump_pickle(result, "results/q3.pkl")
 
     elif args.question == 4:
@@ -307,7 +306,7 @@ if __name__ == "__main__":
             f = empirical_correlation
             output_path = "results/q4_empirical.csv"
         elif args.method == "linear":
-            f = lambda R: linear_shrinkage(R, args.alpha)
+            f = lambda R: linear_shrinkage(R, 0.6)
             output_path = "results/q4_linear.csv"
         elif args.method == "bahc":
             f = bootsrap_halc
@@ -320,7 +319,7 @@ if __name__ == "__main__":
         question_4(args.T, f, output_path, args.path)
 
     elif args.question == 5:
-        result = question_5(args.N, args.T, args.path)
+        result = question_5(args.max_T, args.max_N, args.Nboot, args.nb_cells, args.path)
         dump_pickle(result, "results/q5.pkl")
 
     else:

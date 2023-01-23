@@ -42,7 +42,7 @@ In order to run the model pipeline, execute file `run.py`, different questions c
 
 
 ```bash
-python3 run.py --question 1 --T 300 --N 200 --nb_cells 10 
+python3 run.py --question 1 --T 300 --N 200 --nb_cells 11
 ```
 
 ```bash
@@ -54,7 +54,7 @@ python3 run.py --question 3 --T 300 --N 200 --nb_cells 10
 ```
 
 ```bash
-python3 run.py --question 4 --T 252 --method clustering
+python3 run.py --question 4 --T 252 --method average
 ```
 
 ```bash
